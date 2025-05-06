@@ -1,3 +1,4 @@
+import { api } from "@/features/shared/api/backendApi";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -16,10 +17,6 @@ export const usePaginatedMovies = (page, options = {}) => {
   const queryResult = useQuery({
     queryKey: ["movies", currentPage],
     queryFn: async () => {
-      const api = axios.create({
-        baseURL: "http://localhost:5000/api",
-      });
-
       const response = await api.get("/movies", {
         withCredentials: true,
         params: { page: currentPage },
