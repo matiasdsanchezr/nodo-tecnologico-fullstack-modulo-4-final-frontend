@@ -37,6 +37,7 @@ export const ProfileEditForm = ({ profile }) => {
   }, [profile, reset]);
 
   const onSubmit = (data) => {
+    if (data.type == "owner") data.type = "standard";
     editProfile({
       activeProfileId: selectedProfile?.id,
       profileId: profile.id,
@@ -123,22 +124,24 @@ export const ProfileEditForm = ({ profile }) => {
           )}
         </fieldset>
 
-        <fieldset className="grid gap-2">
-          <label htmlFor="type">Tipo de usuario</label>
-          <select
-            id="type"
-            className={`input ${errors.type ? "border-red-500" : ""}`}
-            {...register("type", {
-              required: "El tipo de perfil es requerido",
-            })}
-          >
-            <option value="standard">Adulto</option>
-            <option value="kid">Niño</option>
-          </select>
-          {errors.type && (
-            <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
-          )}
-        </fieldset>
+        {profile.role.name != "owner" && (
+          <fieldset className="grid gap-2">
+            <label htmlFor="type">Tipo de usuario</label>
+            <select
+              id="type"
+              className={`input ${errors.type ? "border-red-500" : ""}`}
+              {...register("type", {
+                required: "El tipo de perfil es requerido",
+              })}
+            >
+              <option value="standard">Adulto</option>
+              <option value="kid">Niño</option>
+            </select>
+            {errors.type && (
+              <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
+            )}
+          </fieldset>
+        )}
 
         <button type="submit" className="button" disabled={isLoading}>
           {isEditing ? "Guardando..." : "Editar"}

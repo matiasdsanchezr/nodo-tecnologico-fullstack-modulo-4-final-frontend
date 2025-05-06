@@ -14,7 +14,9 @@ import { useAuth } from "@/features/auth/context/AuthContext";
  */
 export const CreateProfileForm = () => {
   const { selectedProfile } = useAuth();
-  const { mutate: createProfile } = useCreateProfile(selectedProfile?.id);
+  const { mutate: createProfile, isPending } = useCreateProfile(
+    selectedProfile?.id
+  );
   const [name, setName] = useState("");
   const [type, setType] = useState("standard");
 
@@ -57,7 +59,7 @@ export const CreateProfileForm = () => {
           </select>
         </fieldset>
 
-        <button type="submit" className="button">
+        <button type="submit" className="button" disabled={isPending}>
           Añadir
         </button>
       </form>
