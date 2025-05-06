@@ -48,7 +48,7 @@ export const RegisterPage = () => {
         <section className="container m-auto flex-1 flex flex-col justify-center p-1">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="m-auto flex flex-col gap-3 w-full max-w-lg bg-bg-secondary dark:bg-dark-bg-secondary p-3 md:p-8 text-white rounded-lg shadow-xl"
+            className="m-auto flex flex-col gap-3 w-full max-w-lg bg-bg-secondary dark:bg-dark-bg-secondary p-3 md:p-8 rounded-lg shadow-xl"
           >
             <h2 className="text-2xl font-bold text-center mb-4">Registro</h2>{" "}
             {submitSuccess && (
@@ -178,5 +178,3 @@ export const RegisterPage = () => {
     </>
   );
 };
-
-export default RegisterPage;

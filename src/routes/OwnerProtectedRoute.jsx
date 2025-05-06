@@ -2,14 +2,18 @@ import { useAuth } from "@/features/auth/context/AuthContext";
 import { Navigate, Outlet } from "react-router-dom";
 
 /**
- * Route disponible para usuarios registrados con perfil activo
+ * Route disponible para el perfil principal
  * @param {{redirectPath: string}} props
  * @returns
  */
-export const ProfileProtectedRoute = ({ redirectPath }) => {
+export const OwnerProtectedRoute = ({ redirectPath }) => {
   const { selectedProfile, isAuthReady } = useAuth();
 
   if (isAuthReady && !selectedProfile) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  if (selectedProfile?.role.name != "owner") {
     return <Navigate to={redirectPath} replace />;
   }
 

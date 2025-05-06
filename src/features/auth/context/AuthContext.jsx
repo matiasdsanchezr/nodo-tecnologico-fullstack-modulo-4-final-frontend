@@ -23,6 +23,9 @@ const AuthContext = createContext(undefined);
 
 /** @type {AuthProviderComponent} */
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   /** @type {AuthErrorState} */
   const [error, setError] = useState();
   /** @type {SelectedProfileState} */
@@ -40,9 +43,6 @@ export const AuthProvider = ({ children }) => {
     isFetched: isProfilesFetched,
     isError: isProfileError,
   } = useProfiles(user);
-  const navigate = useNavigate();
-
-  const queryClient = useQueryClient();
 
   // Intentar cargar perfil previamente seleccionado desde el local storage
   useEffect(() => {

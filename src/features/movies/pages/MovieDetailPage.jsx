@@ -3,11 +3,10 @@ import { Header } from "@/layouts/Header";
 import { useParams } from "react-router";
 import { useMovieDetail } from "../hooks/useMovie";
 
-// ** Reemplaza con tu clave API de TMDb **
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-const POSTER_SIZE = "w500"; // Tamaño del póster deseado (ej: w92, w154, w185, w342, w500, w780, original)
+const POSTER_SIZE = "w500";
 
-function MovieDetail() {
+export const MovieDetail = () => {
   const { movieId } = useParams();
   const { data: movie, isLoading: loading, error } = useMovieDetail(movieId);
 
@@ -41,8 +40,6 @@ function MovieDetail() {
     <>
       <Header />
       <main className="flex-1 bg-bg-primary dark:bg-dark-bg-primary">
-        {/* Diseño adaptable: poster a la izquierda en desktop, arriba en mobile */}
-
         <section
           className="relative overflow-hidden bg-cover bg-center bg-no-repeat backdrop-brightness-50"
           style={{
@@ -123,15 +120,15 @@ function MovieDetail() {
                 </div>
               ) : (
                 <div className="mt-6">
-                  <h2 className="text-2xl font-semibold mb-3">No hay sinopsis disponible</h2>
+                  <h2 className="text-2xl font-semibold mb-3">
+                    No hay sinopsis disponible
+                  </h2>
                 </div>
               )}
-              {/* Puedes añadir más detalles aquí (directores, actores, presupuesto, etc.) */}
             </div>
           </div>
         </section>
-        {/* Puedes añadir secciones adicionales aquí si las necesitas */}
-
+        {/* Seccion Trailer */}
         <section className="my-8 flex flex-col gap-3 justify-center items-center">
           {movie.videos && movie.videos.length > 0 ? (
             <>
@@ -158,6 +155,4 @@ function MovieDetail() {
       <Footer />
     </>
   );
-}
-
-export default MovieDetail;
+};

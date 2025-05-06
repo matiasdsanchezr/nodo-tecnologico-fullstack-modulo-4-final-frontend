@@ -28,7 +28,6 @@ export async function addToWatchlist(profileId, watchlistItem) {
  * @param {string} movie_id
  */
 export async function removeFromWatchlist(profileId, movie_id) {
-  console.log(movie_id);
   const response = await api.delete(`/watchlist/${movie_id}`, {
     headers: { "Active-Profile-ID": profileId },
     withCredentials: true,

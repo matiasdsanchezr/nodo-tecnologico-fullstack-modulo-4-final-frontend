@@ -101,6 +101,7 @@ export const SearchMoviesForm = ({ onSubmit }) => {
       primary_release_year: year,
       vote_average_gte: minRating,
       vote_average_lte: maxRating,
+      includeAdult: includeAdult,
     });
   };
 
@@ -198,7 +199,6 @@ export const SearchMoviesForm = ({ onSubmit }) => {
         />
       </div>
       {/* Field: Genres (More complex - requires fetching genre list) */}
-      {/* This is a simplified example. In a real app, you'd fetch genres and use a multi-select or checkboxes */}
       <div>
         <label
           htmlFor="genres"
@@ -221,8 +221,6 @@ export const SearchMoviesForm = ({ onSubmit }) => {
       </div>
       {/* Field: Include Adult */}
       <div className="flex items-center md:col-span-2">
-        {" "}
-        {/* Center horizontally and span columns */}
         <input
           type="checkbox"
           id="includeAdult"

@@ -7,11 +7,10 @@ import { MoviesGrid } from "../components/MoviesGrid";
 import { useSearchMovies } from "../hooks/useSearchMovies";
 import { PaginationNav } from "../components/PaginationNav";
 
-function SearchMoviesPage() {
+export const SearchMoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data, totalPages, currentPage } = useSearchMovies(searchParams);
 
-  // Handler for form submission
   const handleSubmit = (/** @type {*} */ searchParams) => {
     setSearchParams(() => ({ ...searchParams, page: "1" }));
     return;
@@ -53,7 +52,7 @@ function SearchMoviesPage() {
     <>
       <Header />
       <main className="flex-1 p-4 bg-bg-primary dark:bg-dark-bg-primary">
-        {/* Card-like container for the form */}
+        {/* Buscador */}
         <div className="bg-bg-secondary dark:bg-dark-bg-secondary p-6 rounded-lg shadow-md max-w-xl m-auto">
           <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center">
             <FaSlidersH className="mr-3 text-text-primary dark:text-blue-400" />{" "}
@@ -63,7 +62,9 @@ function SearchMoviesPage() {
         </div>
         <section className="container m-auto">
           <h2 className="text-4xl font-bold text-center m-3">Resultados</h2>
+          {/* Grid de peliculas */}
           {data?.results && <MoviesGrid movies={data?.results} />}
+          {/* Botones de nevegación */}
           {!!totalPages && (
             <PaginationNav
               totalPages={totalPages}
@@ -76,6 +77,4 @@ function SearchMoviesPage() {
       <Footer />
     </>
   );
-}
-
-export default SearchMoviesPage;
+};

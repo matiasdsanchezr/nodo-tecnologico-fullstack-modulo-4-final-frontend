@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/features/auth/context/AuthContext";
-import { FiSearch, FiChevronDown } from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
 import { FaUserCircle, FaRegUserCircle } from "react-icons/fa";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { RiMovie2Line } from "react-icons/ri";
@@ -28,7 +28,10 @@ const Header = ({ isFixed = false }) => {
         <div className="hidden lg:flex items-center justify-between">
           {/* Logo y Navegación */}
           <div className="flex items-center space-x-8">
-            <div className="flex items-center">
+            <Link
+              to="/"
+              className="flex items-center cursor-pointer select-none"
+            >
               <RiMovie2Line className="text-red-500 text-3xl mr-2" />
               <span className="text-xl font-bold">
                 NODO Movies{" "}
@@ -36,10 +39,10 @@ const Header = ({ isFixed = false }) => {
                   <span className="text-red-500">KIDS</span>
                 )}
               </span>
-            </div>
+            </Link>
             {user && (
               <nav className="flex space-x-6">
-                <Link to="/" className="hover:text-red-400 transition">
+                <Link to="/movies" className="hover:text-red-400 transition">
                   Inicio
                 </Link>
                 <Link
@@ -54,19 +57,9 @@ const Header = ({ isFixed = false }) => {
               </nav>
             )}
           </div>
-          {/* Buscador y Perfil */}
+          {/* Perfil */}
           <div className="flex items-center gap-1">
-            {/* <div className="relative">
-                <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  className="bg-bg-primary dark:bg-dark-bg-primary rounded-md py-1 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-red-500 w-64"
-                />
-              </div> */}
-
             <ThemeButton className="ml-auto" />
-
             {user ? (
               <div className="flex items-center space-x-4">
                 {/* Selector de Perfiles */}
@@ -131,8 +124,16 @@ const Header = ({ isFixed = false }) => {
                           to="/profiles"
                           className="block px-4 py-2 text-sm hover:bg-bg-secondary dark:hover:bg-dark-bg-secondary"
                         >
-                          Administrar perfiles
+                          Seleccionar perfil
                         </Link>
+                        {selectedProfile?.role.name == "owner" && (
+                          <Link
+                            to="/profiles/manage"
+                            className="block px-4 py-2 text-sm hover:bg-bg-secondary dark:hover:bg-dark-bg-secondary"
+                          >
+                            Administrar perfiles
+                          </Link>
+                        )}
                       </div>
                       <div className="border-t border-gray-700 mt-1">
                         <a
@@ -170,7 +171,7 @@ const Header = ({ isFixed = false }) => {
 
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between">
-          <div className="flex items-center">
+          <Link to={"/movies"} className="flex items-center">
             <RiMovie2Line className="text-red-500 text-2xl mr-2" />
             <span className="text-lg font-bold">
               NODO Movies{" "}
@@ -178,7 +179,7 @@ const Header = ({ isFixed = false }) => {
                 <span className="text-red-500">KIDS</span>
               )}
             </span>
-          </div>
+          </Link>
 
           <div className="flex items-center space-x-4">
             <ThemeButton />
@@ -200,18 +201,12 @@ const Header = ({ isFixed = false }) => {
           <div className="lg:hidden bg-bg-secondary dark:bg-dark-bg-secondary mt-3 rounded-md p-4">
             {user ? (
               <nav className="flex flex-col space-y-3">
-                <a href="#" className="hover:text-red-400 transition">
+                <Link to="/movies" className="hover:text-red-400 transition">
                   Inicio
-                </a>
-                <a href="#" className="hover:text-red-400 transition">
-                  Series
-                </a>
-                <a href="#" className="hover:text-red-400 transition">
-                  Películas
-                </a>
-                <a href="#" className="hover:text-red-400 transition">
+                </Link>
+                <Link to="/watchlist" className="hover:text-red-400 transition">
                   Mi lista
-                </a>
+                </Link>
               </nav>
             ) : (
               <nav className="flex flex-col space-y-3">
@@ -246,6 +241,7 @@ const Header = ({ isFixed = false }) => {
                   <span>{selectedProfile?.name}</span>
                 </div>
 
+                {/* Lista de perfiles */}
                 <div className="mt-3 space-y-2">
                   {profiles?.map((profile) => (
                     <button
@@ -255,7 +251,7 @@ const Header = ({ isFixed = false }) => {
                         selectProfile(profile.id);
                         setMobileMenuOpen(false);
                       }}
-                      className={`w-full text-left px-2 py-1 rounded hover:bg-gray-700 flex items-center space-x-2 ${
+                      className={`w-full text-left px-2 py-1 rounded hover:bg-bg-primary flex items-center space-x-2 ${
                         selectedProfile?.id === profile.id ? "text-red-400" : ""
                       }`}
                     >
@@ -271,6 +267,23 @@ const Header = ({ isFixed = false }) => {
                       <span>{profile.name}</span>
                     </button>
                   ))}
+                </div>
+
+                <div className="border-t border-gray-700 mt-4 py-4 space-y-3">
+                  <Link
+                    to="/profiles"
+                    className="block hover:text-red-400 transition"
+                  >
+                    Seleccionar perfil
+                  </Link>
+                  {selectedProfile?.role.name == "owner" && (
+                    <Link
+                      to="/profiles/manage"
+                      className="block hover:text-red-400 transition "
+                    >
+                      Administrar perfiles
+                    </Link>
+                  )}
                 </div>
               </div>
             )}

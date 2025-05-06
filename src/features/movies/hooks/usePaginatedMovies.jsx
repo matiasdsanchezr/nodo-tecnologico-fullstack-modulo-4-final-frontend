@@ -40,7 +40,6 @@ export const usePaginatedMovies = (page, options = {}) => {
 
   // Función para ir a la página siguiente
   const goToNextPage = () => {
-    console.log(currentPage);
     if (queryResult.data && currentPage < queryResult.data.total_pages) {
       setCurrentPage((prevPage) => prevPage + 1);
     }

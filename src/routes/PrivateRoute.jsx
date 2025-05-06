@@ -1,18 +1,18 @@
 import { useAuth } from "@/features/auth/context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 /**
- *
- * @param {{children: import("react").ReactNode}} props
+ * Route disponible para cualquier usuario registrado
+ * @param {{redirectPath: string}} props
  * @returns
  */
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ redirectPath }) => {
   const { user, isAuthReady } = useAuth();
   if (isAuthReady && !user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={redirectPath} replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
-export default PrivateRoute;
+export { PrivateRoute };
