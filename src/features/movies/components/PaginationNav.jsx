@@ -2,13 +2,13 @@ import React, { useState } from "react";
 
 /**
  *
- * @param {{totalPages: number, currentPage?: number, onPageChange: (page: number)=> void}} param0
+ * @param {{totalPages: number, currentPage?: number, onChangePage: (page: number)=> void}} param0
  * @returns
  */
 export const PaginationNav = ({
   totalPages,
   currentPage = 1,
-  onPageChange,
+  onChangePage: onPageChange,
 }) => {
   const [pageInput, setPageInput] = useState("");
 

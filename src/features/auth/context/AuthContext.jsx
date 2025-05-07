@@ -11,7 +11,7 @@ import { loginUser, logoutUser } from "@/features/auth/api/authApi";
 import useCurrentUser from "../hooks/useCurrentUser";
 import useProfiles from "@/features/profiles/hooks/useProfiles";
 import { useNavigate } from "react-router-dom";
-import LoadingPage from "@/features/shared/pages/LoadingPage";
+import { LoadingPage } from "@/features/shared/pages/LoadingPage";
 
 /**
  * Importar definiciones de tipos

@@ -1,18 +1,18 @@
 import { Footer } from "@/layouts/Footer";
 import { Header } from "@/layouts/Header";
 import { usePaginatedMovies } from "../hooks/usePaginatedMovies";
-import LoadingPage from "@/features/shared/pages/LoadingPage";
+import { LoadingPage } from "@/features/shared/pages/LoadingPage";
 import { MoviesGrid } from "../components/MoviesGrid";
 import { PaginationNav } from "../components/PaginationNav";
 
 export const PopularMovies = () => {
-  const { data, currentPage, isLoading, goToPage } = usePaginatedMovies(1);
+  const { data, currentPage, isFetching, goToPage } = usePaginatedMovies(1);
 
   const handlePageChange = (/** @type {number} */ page) => {
     goToPage(page);
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return <LoadingPage message="Cargando peliculas..." />;
   }
 
@@ -32,7 +32,7 @@ export const PopularMovies = () => {
             <PaginationNav
               totalPages={data.total_pages}
               currentPage={currentPage}
-              onPageChange={handlePageChange}
+              onChangePage={handlePageChange}
             />
           )}
         </div>

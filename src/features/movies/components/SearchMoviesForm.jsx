@@ -1,7 +1,13 @@
-import React, { useState } from "react";
-import { FaCalendarAlt, FaSearch, FaStar } from "react-icons/fa";
+import { useAuth } from "@/features/auth/context/AuthContext";
+import { useState } from "react";
+import { FaCalendarAlt, FaSearch, FaSort, FaStar } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 const genresList = [
+  {
+    id: 0,
+    name: "Sin especificar",
+  },
   {
     id: 28,
     name: "Acción",
@@ -82,27 +88,47 @@ const genresList = [
 
 /**
  *
- * @param {*} props
  * @returns
  */
-export const SearchMoviesForm = ({ onSubmit }) => {
-  // State for each form input
-  const [year, setYear] = useState("");
-  //   const [sortBy, setSortBy] = useState("popularity.desc");
-  const [minRating, setMinRating] = useState("");
-  const [maxRating, setMaxRating] = useState("");
-  const [includeAdult, setIncludeAdult] = useState(false);
-  const [genre, setGenre] = useState("");
+export const SearchMoviesForm = () => {
+  const { selectedProfile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [year, setYear] = useState(
+    searchParams.get("primary_release_year") ?? undefined
+  );
+  const [sortBy, setSortBy] = useState(
+    searchParams.get("sort_by") ?? undefined
+  );
+  const [minRating, setMinRating] = useState(
+    searchParams.get("vote_average_gte") ?? undefined
+  );
+  const [maxRating, setMaxRating] = useState(
+    searchParams.get("vote_average_lte") ?? undefined
+  );
+  const [includeAdult, setIncludeAdult] = useState(
+    searchParams.get("includeAdult") === "true"
+  );
+  const [genre, setGenre] = useState(searchParams.get("genre") ?? undefined);
 
   const handleSubmit = (/** @type {any} */ e) => {
     e.preventDefault();
-    onSubmit({
-      genre: genre,
+    const criteria = {
+      genre: genre ?? undefined,
       primary_release_year: year,
       vote_average_gte: minRating,
       vote_average_lte: maxRating,
-      includeAdult: includeAdult,
-    });
+      includeAdult: includeAdult || undefined,
+      sort_by: sortBy,
+    };
+
+    const cleanedCriteria = Object.fromEntries(
+      Object.entries(criteria).filter(
+        // eslint-disable-next-line no-unused-vars
+        ([_, value]) => value !== undefined && value !== ""
+      )
+    );
+
+    setSearchParams(() => ({ ...cleanedCriteria, page: "1" }));
   };
 
   return (
@@ -127,37 +153,29 @@ export const SearchMoviesForm = ({ onSubmit }) => {
         />
       </div>
       {/* Field: Sort By */}
-      {/* <div>
-                  <label
-                    htmlFor="sortBy"
-                    className="text-sm font-medium flex items-center"
-                  >
-                    <FaSort className="mr-2 text-gray-400" /> Ordenar por:
-                  </label>
-                  <select
-                    id="sortBy"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="mt-1 block w-full rounded-md bg-bg-primary dark:bg-gray-700 border-gray-600 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  >
-                    <option value="popularity.desc">Popularidad (Desc)</option>
-                    <option value="popularity.asc">Popularidad (Asc)</option>
-                    <option value="release_date.desc">
-                      Fecha de Lanzamiento (Desc)
-                    </option>
-                    <option value="release_date.asc">
-                      Fecha de Lanzamiento (Asc)
-                    </option>
-                    <option value="revenue.desc">Recaudación (Desc)</option>
-                    <option value="revenue.asc">Recaudación (Asc)</option>
-                    <option value="vote_average.desc">
-                      Promedio de Votos (Desc)
-                    </option>
-                    <option value="vote_average.asc">
-                      Promedio de Votos (Asc)
-                    </option>
-                  </select>
-                </div> */}
+      <div>
+        <label
+          htmlFor="sortBy"
+          className="text-sm font-medium flex items-center"
+        >
+          <FaSort className="mr-2 text-gray-400" /> Ordenar por:
+        </label>
+        <select
+          id="sortBy"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="mt-1 block w-full rounded-md bg-bg-primary dark:bg-gray-700 border-gray-600 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        >
+          <option value="popularity.desc">Popularidad (Desc)</option>
+          <option value="popularity.asc">Popularidad (Asc)</option>
+          <option value="release_date.desc">Fecha de Lanzamiento (Desc)</option>
+          <option value="release_date.asc">Fecha de Lanzamiento (Asc)</option>
+          <option value="revenue.desc">Recaudación (Desc)</option>
+          <option value="revenue.asc">Recaudación (Asc)</option>
+          <option value="vote_average.desc">Promedio de Votos (Desc)</option>
+          <option value="vote_average.asc">Promedio de Votos (Asc)</option>
+        </select>
+      </div>
       {/* Field: Minimum Rating */}
       <div>
         <label
@@ -178,7 +196,7 @@ export const SearchMoviesForm = ({ onSubmit }) => {
           step="0.1"
         />
       </div>
-      {/* Field: Maximum Rating (Optional) */}
+      {/* Field: Maximum Rating  */}
       <div>
         <label
           htmlFor="maxRating"
@@ -198,7 +216,7 @@ export const SearchMoviesForm = ({ onSubmit }) => {
           step="0.1"
         />
       </div>
-      {/* Field: Genres (More complex - requires fetching genre list) */}
+      {/* Field: Genres */}
       <div>
         <label
           htmlFor="genres"
@@ -228,12 +246,14 @@ export const SearchMoviesForm = ({ onSubmit }) => {
           onChange={(e) => setIncludeAdult(e.target.checked)}
           className="h-4 w-4 text-blue-600 border-gray-600 rounded focus:ring-blue-500"
         />
-        <label
-          htmlFor="includeAdult"
-          className="ml-2 block text-sm font-medium"
-        >
-          Incluir contenido para adultos
-        </label>
+        {selectedProfile?.role.name != "kid" && (
+          <label
+            htmlFor="includeAdult"
+            className="ml-2 block text-sm font-medium"
+          >
+            Incluir contenido para adultos
+          </label>
+        )}
       </div>
       {/* Submit Button */}
       <div className="md:col-span-2 flex justify-center mt-4">

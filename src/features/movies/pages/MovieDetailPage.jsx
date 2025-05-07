@@ -2,6 +2,8 @@ import { Footer } from "@/layouts/Footer";
 import { Header } from "@/layouts/Header";
 import { useParams } from "react-router";
 import { useMovieDetail } from "../hooks/useMovie";
+import { LoadingPage } from "@/features/shared/pages/LoadingPage";
+import { ErrorPage } from "@/features/shared/pages/ErrorPage";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 const POSTER_SIZE = "w500";
@@ -11,28 +13,12 @@ export const MovieDetail = () => {
   const { data: movie, isLoading: loading, error } = useMovieDetail(movieId);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-xl text-gray-700">Cargando...</div>
-      </div>
-    );
+    return <LoadingPage message={"Cargando detalles de la película..."} />;
   }
 
-  if (error) {
+  if (error || !movie) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-xl text-red-600">Error: {error.message}</div>
-      </div>
-    );
-  }
-
-  if (!movie) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-xl text-gray-700">
-          No se pudieron cargar los detalles de la película.
-        </div>
-      </div>
+      <ErrorPage message="Se produjo un error al cargar los detalles de la pelicula" />
     );
   }
 
@@ -133,9 +119,8 @@ export const MovieDetail = () => {
           {movie.videos && movie.videos.length > 0 ? (
             <>
               <h2 className="text-4xl font-bold">Trailer</h2>
+              {/* eslint-disable-next-line react-dom/no-missing-iframe-sandbox */}
               <iframe
-                // eslint-disable-next-line react-dom/no-unsafe-iframe-sandbox
-                sandbox="allow-scripts allow-same-origin allow-presentation"
                 width="560"
                 height="315"
                 src={`https://www.youtube.com/embed/${movie.videos[0].key}`}

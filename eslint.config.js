@@ -29,13 +29,12 @@ export default [
       ...reactHooks.configs.recommended.rules,
       "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
       "react-refresh/only-export-components": [
-        "warn",
+        "off",
         { allowConstantExport: true },
       ],
       ...reactX.configs["recommended-typescript"].rules,
       ...reactDom.configs.recommended.rules,
       "react-x/no-use-context": "off",
-      "react-refresh/only-export-components": "off",
     },
   },
 ];

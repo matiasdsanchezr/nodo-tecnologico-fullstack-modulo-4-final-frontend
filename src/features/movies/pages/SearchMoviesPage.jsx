@@ -6,37 +6,14 @@ import { SearchMoviesForm } from "../components/SearchMoviesForm";
 import { MoviesGrid } from "../components/MoviesGrid";
 import { useSearchMovies } from "../hooks/useSearchMovies";
 import { PaginationNav } from "../components/PaginationNav";
+import LoadingPage from "@/features/shared/pages/LoadingPage";
 
 export const SearchMoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, totalPages, currentPage } = useSearchMovies(searchParams);
+  const { data, totalPages, currentPage, isFetching } =
+    useSearchMovies(searchParams);
 
-  const handleSubmit = (/** @type {*} */ searchParams) => {
-    setSearchParams(() => ({ ...searchParams, page: "1" }));
-    return;
-
-    // const criteria = {
-    //   primary_release_year: year || undefined,
-    //   sort_by: sortBy,
-    //   "vote_average.gte": minRating || undefined,
-    //   "vote_average.lte": maxRating || undefined,
-    //   include_adult: includeAdult,
-    // };
-
-    // const cleanedCriteria = Object.fromEntries(
-    //   Object.entries(criteria).filter(
-    //     ([_, value]) => value !== undefined && value !== ""
-    //   )
-    // );
-
-    // if (!includeAdult) {
-    //   delete cleanedCriteria.include_adult;
-    // }
-
-    // console.log("Search Criteria:", cleanedCriteria); // Log criteria for debugging
-  };
-
-  const handlePageChange = (/** @type {number} */ page) => {
+  const handleOnChangePage = (/** @type {number} */ page) => {
     setSearchParams((prevSearchParams) => {
       const currentParamsAsObject = Object.fromEntries(
         prevSearchParams.entries()
@@ -48,6 +25,8 @@ export const SearchMoviesPage = () => {
     });
   };
 
+  if (isFetching) return <LoadingPage message="Cargando resultados..." />;
+
   return (
     <>
       <Header />
@@ -58,7 +37,7 @@ export const SearchMoviesPage = () => {
             <FaSlidersH className="mr-3 text-text-primary dark:text-blue-400" />{" "}
             Búsqueda Avanzada de Películas
           </h2>
-          <SearchMoviesForm onSubmit={handleSubmit} />
+          <SearchMoviesForm />
         </div>
         <section className="container m-auto">
           <h2 className="text-4xl font-bold text-center m-3">Resultados</h2>
@@ -69,7 +48,7 @@ export const SearchMoviesPage = () => {
             <PaginationNav
               totalPages={totalPages}
               currentPage={currentPage}
-              onPageChange={handlePageChange}
+              onChangePage={handleOnChangePage}
             />
           )}
         </section>
