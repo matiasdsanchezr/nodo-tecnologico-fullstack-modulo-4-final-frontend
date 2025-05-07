@@ -30,6 +30,7 @@ export type MovieCardProps = {
     poster_path: string;
     vote_average: number;
     release_date: string;
+    isInWatchlist: boolean;
   };
 };
 
@@ -40,8 +41,6 @@ export type TmdbApiResponse = {
 
 export type UsePopularMoviesType = UseQueryResult<TmdbApiResponse> & {
   currentPage: number;
-  goToNextPage: () => void;
-  goToPreviousPage: () => void;
   goToPage: (pageNumber: number) => void;
 };
 

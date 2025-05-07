@@ -4,7 +4,6 @@ import { getWatchlist } from "../api/watchlistApi"; // Asegúrate de que la ruta
 import { useCallback, useMemo } from "react";
 
 /**
- * @import { UseQueryResult } from "@tanstack/react-query";
  * @import { WatchlistItem, UseWatchlistValue } from "@/features/watchlist/watchlist.types"
  */
 

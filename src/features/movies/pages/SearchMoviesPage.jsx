@@ -1,17 +1,21 @@
+import { useAuth } from "@/features/auth/context/AuthContext";
+import { LoadingPage } from "@/features/shared/pages/LoadingPage";
+import { useWatchlist } from "@/features/watchlist/hooks/useWatchlist";
 import { Footer } from "@/layouts/Footer";
 import { Header } from "@/layouts/Header";
 import { FaSlidersH } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
-import { SearchMoviesForm } from "../components/SearchMoviesForm";
 import { MoviesGrid } from "../components/MoviesGrid";
-import { useSearchMovies } from "../hooks/useSearchMovies";
 import { PaginationNav } from "../components/PaginationNav";
-import LoadingPage from "@/features/shared/pages/LoadingPage";
+import { SearchMoviesForm } from "../components/SearchMoviesForm";
+import { useSearchMovies } from "../hooks/useSearchMovies";
 
 export const SearchMoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { selectedProfile } = useAuth();
   const { data, totalPages, currentPage, isFetching } =
     useSearchMovies(searchParams);
+  const { isInWatchlist } = useWatchlist(selectedProfile?.id);
 
   const handleOnChangePage = (/** @type {number} */ page) => {
     setSearchParams((prevSearchParams) => {
@@ -25,7 +29,12 @@ export const SearchMoviesPage = () => {
     });
   };
 
-  if (isFetching) return <LoadingPage message="Cargando resultados..." />;
+  if (isFetching) return <LoadingPage message="Cargando peliculas..." />;
+
+  const movies = data?.results.map((movie) => ({
+    ...movie,
+    isInWatchlist: isInWatchlist(movie.id),
+  }));
 
   return (
     <>
@@ -39,19 +48,20 @@ export const SearchMoviesPage = () => {
           </h2>
           <SearchMoviesForm />
         </div>
-        <section className="container m-auto">
-          <h2 className="text-4xl font-bold text-center m-3">Resultados</h2>
-          {/* Grid de peliculas */}
-          {data?.results && <MoviesGrid movies={data?.results} />}
-          {/* Botones de nevegación */}
-          {!!totalPages && (
-            <PaginationNav
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onChangePage={handleOnChangePage}
-            />
-          )}
-        </section>
+        {movies && (
+          <section className="container m-auto">
+            <h2 className="text-4xl font-bold text-center m-3">Resultados</h2>
+            <MoviesGrid movies={movies} />
+            {/* Botones de nevegación */}
+            {!!totalPages && (
+              <PaginationNav
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onChangePage={handleOnChangePage}
+              />
+            )}
+          </section>
+        )}
       </main>
       <Footer />
     </>

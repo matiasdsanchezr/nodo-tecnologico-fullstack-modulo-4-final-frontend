@@ -17,7 +17,7 @@ export const useRegister = () => {
     },
     onError: (error, variables) => {
       console.error(
-        `Error registering user with data ${variables}:`,
+        `Error registering new user with data ${variables}:`,
         error
       );
     },

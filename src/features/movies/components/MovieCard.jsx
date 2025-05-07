@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { BsBookmarkFill, BsBookmarkPlus } from "react-icons/bs";
 import { useAuth } from "@/features/auth/context/AuthContext";
-import { useWatchlist } from "@/features/watchlist/hooks/useWatchlist";
 import { useAddToWatchlist } from "@/features/watchlist/hooks/useAddToWatchlist";
 import { useRemoveFromWatchlist } from "@/features/watchlist/hooks/useRemoveFromWatchlist";
 import moviePlaceholderImage from "@/assets/movie-placeholder.png";
+import { useState } from "react";
+/** @import { MovieCardProps } from "@/features/movies/movies.types" */
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-
-/** @import { Movie, MovieCardProps } from "@/features/movies/movies.types" */
 
 /**
  * Card con informacion basica de una pelicula, incluyendo boton para agregar a watchlist.
@@ -17,15 +16,28 @@ const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 export const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
   const { selectedProfile } = useAuth();
-  const { isInWatchlist } = useWatchlist(selectedProfile?.id);
   const { mutate: addToWatchlist, isPending: isPendingAdd } = useAddToWatchlist(
     selectedProfile?.id
   );
   const { mutate: removeFromWatchlist, isPending: isPendingRemove } =
     useRemoveFromWatchlist(selectedProfile?.id);
+  const [isInWatchlist, setIsInWatchlist] = useState(movie.isInWatchlist);
 
-  const isFavorite = isInWatchlist(movie.id);
-  const isPending = isPendingAdd || isPendingRemove;
+  const isDisabled = isPendingAdd || isPendingRemove;
+
+  const clickWatchlistButtonHandler = () => {
+    setIsInWatchlist(() => !isInWatchlist);
+    isInWatchlist
+      ? removeFromWatchlist(movie.id)
+      : addToWatchlist({
+          movie_id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          vote_average: movie.vote_average,
+          release_date: movie.release_date,
+          watched: false,
+        });
+  };
 
   return (
     <div
@@ -70,42 +82,31 @@ export const MovieCard = ({ movie }) => {
         </div>
       </div>
 
-      {/* Botón de Watchlist - Cambia apariencia y acción según isInWatchlist */}
+      {/* Botón de Watchlist */}
       <button
         type="button"
         className={`absolute top-2 right-2 p-2 rounded-full shadow-md transition duration-200 z-10
           ${
-            isFavorite
+            isInWatchlist
               ? "bg-green-600 text-white hover:bg-green-700"
               : "bg-blue-600 text-white hover:bg-blue-700"
           }
-          ${isPending && "bg-gray-600 hover:bg-gray-600"}
+          ${isDisabled && "bg-gray-600 hover:bg-gray-600"}
           `}
-        onClick={() => {
-          isFavorite
-            ? removeFromWatchlist(movie.id)
-            : addToWatchlist({
-                movie_id: movie.id,
-                title: movie.title,
-                poster_path: movie.poster_path,
-                vote_average: movie.vote_average,
-                release_date: movie.release_date,
-                watched: false,
-              });
-        }}
+        onClick={clickWatchlistButtonHandler}
         aria-label={
-          isFavorite
+          isInWatchlist
             ? `Eliminar ${movie.title} de Watchlist`
             : `Agregar ${movie.title} a Watchlist`
         }
         title={
-          isFavorite
+          isInWatchlist
             ? `Eliminar ${movie.title} de Watchlist`
             : `Agregar ${movie.title} a Watchlist`
         }
-        disabled={isPending}
+        disabled={isDisabled}
       >
-        {isFavorite ? (
+        {isInWatchlist ? (
           <BsBookmarkFill size={20} />
         ) : (
           <BsBookmarkPlus size={20} />

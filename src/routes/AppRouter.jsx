@@ -1,7 +1,7 @@
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { MovieDetail } from "@/features/movies/pages/MovieDetailPage";
-import { PopularMovies } from "@/features/movies/pages/PopularMoviesPage";
+import { PopularMoviesPage } from "@/features/movies/pages/PopularMoviesPage";
 import { SearchMoviesPage } from "@/features/movies/pages/SearchMoviesPage";
 import { ProfilesManagePage } from "@/features/profiles/pages/ProfilesManagePage";
 import { SelectProfilePage } from "@/features/profiles/pages/ProfilesPage";
@@ -29,8 +29,8 @@ const AppRouter = () => {
         <Route path="/profiles/manage" element={<ProfilesManagePage />} />
       </Route>
       <Route element={<ProfileProtectedRoute redirectPath="/profiles" />}>
-        <Route path="/movies" element={<PopularMovies />} />
-        <Route path="/movies/popular" element={<PopularMovies />} />
+        <Route path="/movies" element={<PopularMoviesPage />} />
+        <Route path="/movies/popular" element={<PopularMoviesPage />} />
         <Route path="/movies/details/:movieId" element={<MovieDetail />} />
         <Route path="/movies/search" element={<SearchMoviesPage />} />
         <Route path="/watchlist" element={<WatchlistPage />} />

@@ -97,7 +97,7 @@ export const SearchMoviesForm = () => {
     searchParams.get("primary_release_year") ?? undefined
   );
   const [sortBy, setSortBy] = useState(
-    searchParams.get("sort_by") ?? undefined
+    searchParams.get("sort_by") ?? "popularity.desc"
   );
   const [minRating, setMinRating] = useState(
     searchParams.get("vote_average_gte") ?? undefined
@@ -120,6 +120,10 @@ export const SearchMoviesForm = () => {
       includeAdult: includeAdult || undefined,
       sort_by: sortBy,
     };
+
+    if (!includeAdult || selectedProfile?.role.name === "kid") {
+      delete criteria.includeAdult;
+    }
 
     const cleanedCriteria = Object.fromEntries(
       Object.entries(criteria).filter(
@@ -238,23 +242,25 @@ export const SearchMoviesForm = () => {
         </select>
       </div>
       {/* Field: Include Adult */}
-      <div className="flex items-center md:col-span-2">
-        <input
-          type="checkbox"
-          id="includeAdult"
-          checked={includeAdult}
-          onChange={(e) => setIncludeAdult(e.target.checked)}
-          className="h-4 w-4 text-blue-600 border-gray-600 rounded focus:ring-blue-500"
-        />
-        {selectedProfile?.role.name != "kid" && (
+      {selectedProfile?.role.name != "kid" && (
+        <div className="flex items-center md:col-span-2">
+          <input
+            type="checkbox"
+            id="includeAdult"
+            checked={includeAdult}
+            onChange={(e) => setIncludeAdult(e.target.checked)}
+            className="h-4 w-4 text-blue-600 border-gray-600 rounded focus:ring-blue-500"
+          />
+          (
           <label
             htmlFor="includeAdult"
             className="ml-2 block text-sm font-medium"
           >
             Incluir contenido para adultos
           </label>
-        )}
-      </div>
+          )
+        </div>
+      )}
       {/* Submit Button */}
       <div className="md:col-span-2 flex justify-center mt-4">
         <button

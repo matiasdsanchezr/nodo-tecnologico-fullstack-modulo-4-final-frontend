@@ -10,11 +10,11 @@ export const WatchlistPage = () => {
   const { selectedProfile } = useAuth();
   const {
     data: watchlist,
-    isFetching,
+    isLoading,
     error,
   } = useWatchlist(selectedProfile?.id);
 
-  if (isFetching) return <LoadingPage message="Cargando Mi lista..." />;
+  if (isLoading) return <LoadingPage message="Cargando Mi lista..." />;
 
   if (error) {
     return <ErrorPage message="Se produjo un error al cargar Mi Lista." />;
@@ -35,7 +35,11 @@ export const WatchlistPage = () => {
               {watchlist?.map((watchlistItem) => (
                 <MovieCard
                   key={watchlistItem.movie_id}
-                  movie={{ ...watchlistItem, id: watchlistItem.movie_id }}
+                  movie={{
+                    ...watchlistItem,
+                    id: watchlistItem.movie_id,
+                    isInWatchlist: true,
+                  }}
                 />
               ))}
             </div>
