@@ -16,7 +16,10 @@ export const useRegister = () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
     onError: (error, variables) => {
-      console.error(`Error removing movie ${variables} to watchlist:`, error);
+      console.error(
+        `Error registering user with data ${variables}:`,
+        error
+      );
     },
   });
 };

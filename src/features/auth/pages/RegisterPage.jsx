@@ -131,6 +131,11 @@ export const RegisterPage = () => {
                     value: 6,
                     message: "La contraseña debe tener al menos 6 caracteres",
                   },
+                  validate: (value) =>
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&_-]).{8,}$/.test(
+                      value
+                    ) ||
+                    "La contraseña no es segura. Debe contener un minimo de 8 caracteres con una minuscula, una mayuscula y un caracterer especial.",
                 })}
               />
               {errors.password && (
