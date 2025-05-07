@@ -251,14 +251,12 @@ export const SearchMoviesForm = () => {
             onChange={(e) => setIncludeAdult(e.target.checked)}
             className="h-4 w-4 text-blue-600 border-gray-600 rounded focus:ring-blue-500"
           />
-          (
           <label
             htmlFor="includeAdult"
             className="ml-2 block text-sm font-medium"
           >
             Incluir contenido para adultos
           </label>
-          )
         </div>
       )}
       {/* Submit Button */}
