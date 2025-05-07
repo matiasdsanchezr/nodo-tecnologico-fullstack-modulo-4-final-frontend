@@ -15,13 +15,14 @@ const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
  */
 export const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
+  const [isInWatchlist, setIsInWatchlist] = useState(movie.isInWatchlist);
   const { selectedProfile } = useAuth();
+
   const { mutate: addToWatchlist, isPending: isPendingAdd } = useAddToWatchlist(
     selectedProfile?.id
   );
   const { mutate: removeFromWatchlist, isPending: isPendingRemove } =
     useRemoveFromWatchlist(selectedProfile?.id);
-  const [isInWatchlist, setIsInWatchlist] = useState(movie.isInWatchlist);
 
   const isDisabled = isPendingAdd || isPendingRemove;
 
@@ -85,14 +86,11 @@ export const MovieCard = ({ movie }) => {
       {/* Botón de Watchlist */}
       <button
         type="button"
-        className={`absolute top-2 right-2 p-2 rounded-full shadow-md transition duration-200 z-10
-          ${
-            isInWatchlist
-              ? "bg-green-600 text-white hover:bg-green-700"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }
-          ${isDisabled && "bg-gray-600 hover:bg-gray-600"}
-          `}
+        className={`absolute top-2 right-2 p-2 rounded-full shadow-md transition duration-200 z-10 disabled:opacity-50 ${
+          isInWatchlist
+            ? "bg-green-600 hover:bg-green-700"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
         onClick={clickWatchlistButtonHandler}
         aria-label={
           isInWatchlist
